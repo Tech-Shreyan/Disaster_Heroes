@@ -26,7 +26,7 @@ class Report(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     date_time = models.DateTimeField()
-    categories = models.CharField(max_length=200)
+    categories = models.CharField(max_length=200, blank=True, null=True)  # Changed to allow null
     location = models.CharField(max_length=200, blank=True, null=True)
     location_landmark = models.CharField(max_length=200, blank=True, null=True)
     full_name = models.CharField(max_length=100, blank=True, null=True)

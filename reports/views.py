@@ -159,12 +159,25 @@ def submit_report_api(request):
             else:
                 data = request.POST.dict()
             
-            # Process categories if they come as a list or comma-separated string
-            if 'categories' in data:
-                if isinstance(data['categories'], list):
-                    data['categories'] = ','.join(data['categories'])
+            # Make a copy of data to avoid modifying the original
+            form_data = data.copy()
             
-            form = ReportForm(data)
+            # Handle categories
+            if 'categories' in data:
+                if data['categories'] is None:
+                    # Handle null categories
+                    form_data['categories'] = []
+                elif isinstance(data['categories'], list):
+                    # Keep as list for the form to process
+                    form_data['categories'] = data['categories']
+                elif isinstance(data['categories'], str):
+                    # Handle comma-separated string
+                    if data['categories']:
+                        form_data['categories'] = [c.strip() for c in data['categories'].split(',')]
+                    else:
+                        form_data['categories'] = []
+            
+            form = ReportForm(form_data)
             if form.is_valid():
                 report = form.save(commit=False)
                 

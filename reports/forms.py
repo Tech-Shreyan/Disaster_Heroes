@@ -53,7 +53,7 @@ class ReportForm(forms.ModelForm):
     categories = forms.MultipleChoiceField(
         choices=CATEGORY_CHOICES,
         widget=forms.CheckboxSelectMultiple,
-        required=True
+        required=False
     )
     location = forms.CharField(max_length=200, required=False)
     location_landmark = forms.CharField(max_length=200, required=False)
@@ -73,6 +73,8 @@ class ReportForm(forms.ModelForm):
     
     def clean_categories(self):
         categories = self.cleaned_data.get('categories')
+        if not categories:
+            return None  # Return None instead of a default value
         return ','.join(categories)
     
     def clean_email(self):
